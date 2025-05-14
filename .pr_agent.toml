@@ -1,0 +1,77 @@
+[config] response_language="nl-BE"
+
+[pr_reviewer] extra_instructions="""\
+- Verify adherence to the project's JavaScript style guide (e.g., ESLint/Prettier configs based on Airbnb, StandardJS, or Google).
+- Identify and flag overly complex or 'clever' JavaScript code that sacrifices readability (e.g., excessive chaining, complex ternaries).
+- Assess if PR changes degrade overall code quality in modified JS files (complexity, linting errors, test coverage).
+- For bug fixes, verify inclusion of a test case (e.g., using Jest, Mocha, Vitest) that reproduces the bug and shows the fix.
+- Avoid declaring variables in the global scope; use ES6 modules and proper scoping (`let`, `const`).
+- Detect hardcoded configuration values (API keys, URLs) in JS code; suggest using environment variables (`process.env`) or dedicated config files/modules.
+- Identify long if/else if or switch statements on type strings; suggest polymorphism (classes, duck-typing, or function-based strategies).
+- Check if `async/await`, Promise-based logic, or `worker_threads` usage is clear, handles errors, and avoids blocking the event loop.
+- Flag functions or components with excessive parameters or overly complex options objects.
+- Detect direct `require`/`import` of concrete implementations deep within modules where dependency injection (via constructors, function arguments, or frameworks) would be better.
+- Identify method call chains violating Law of Demeter (e.g., `obj.prop1.prop2.doSomething()`).
+- Detect deviations from established JS coding patterns (e.g., `var` vs `let`/`const` usage, function declaration vs. expression) or project conventions.
+- Identify complex expressions (e.g., in conditionals, JSX) not assigned to descriptively named intermediate constants or variables.
+- Check for scattered handling of similar boundary conditions (e.g., `null`/`undefined` checks); suggest consolidation or leveraging `?.` and `??` clearly.
+- Suggest creating classes or factory functions for primitives representing specific domain concepts (e.g., `Email`, `Money`) instead of primitive obsession.
+- Flag components or classes with implicit logical dependencies between methods or state changes that are hard to follow.
+- Flag negative conditional statements; suggest positive phrasing or restructuring for clarity.
+- Watch for implicit type coercions (e.g., `==` vs `===`, `+` with mixed types); prefer strict equality (`===`, `!==`) and explicit type conversions.
+- Identify non-descriptive names; use `camelCase` for variables/functions, `PascalCase` for classes/constructors. Avoid short/generic names (e.g., `arr`, `obj`, `el`).
+- Flag names differing only by numbers or trivial suffixes if they don't represent clear distinctions.
+- Identify names with unpronounceable consonant strings or cryptic abbreviations.
+- Flag single-letter variables (except common iterators in short loops) or overly short/common names in larger scopes. Use meaningful `const` names.
+- Detect magic numbers or strings in logic; recommend `const` variables with descriptive names.
+- Avoid unnecessary type or scope encodings in names (e.g., `bUserIsActive`, `s_settingValue`).
+- Flag functions (including arrow functions and methods) exceeding configured line count or cyclomatic complexity thresholds.
+- Analyze function cohesion; flag functions performing multiple unrelated operations or operating on different abstraction levels.
+- Flag functions/methods with too many distinct parameters (e.g., >3-4); suggest using object destructuring for parameters if it clarifies, or a parameter object.
+- For query-like functions, identify modifications to external state, input parameters (objects/arrays), or DOM mutations.
+- Detect boolean flag arguments controlling function behavior; suggest splitting the function into more specific ones.
+- Promote pure functions where possible, especially for data transformations or in state management (e.g., Redux reducers).
+- Identify incorrect usage or loss of `this` context; suggest arrow functions, `.bind()`, or class field syntax.
+- Ensure JSDoc is used for documenting non-trivial functions, their parameters, return types, and purpose, especially for shared modules.
+- Identify comments that merely restate what the JavaScript code clearly does (e.g., `// increment x` for `x++`).
+- Flag placeholder comments (e.g., contextless `// TODO`) or overly verbose comments that clutter the code.
+- Detect comments on closing braces (less common with auto-formatters, but still noise).
+- Identify and recommend removal of commented-out code blocks; rely on version control (Git).
+- Verify complex or non-obvious JavaScript logic has comments explaining the 'why' or overall strategy.
+- Check for comments clarifying potentially misleading JavaScript code, workarounds, or subtle consequences (e.g., performance implications, async behavior).
+- Identify comments warning about side effects, concurrency issues (e.g., race conditions with Promises), or critical usage.
+- Analyze JS files/modules for intermingling of distinct concepts; suggest separation into different modules or components (SRP for modules).
+- Identify scattered related code fragments (e.g., state and its manipulators in a component); suggest co-location.
+- Flag variables (`let`, `const`) declared significantly before their first use, even with block scoping.
+- Check if helper functions are defined close to their callers within the same module or are clearly imported.
+- Check if conceptually similar functions, constants, or components within a module are grouped together.
+- Prefer a structure where higher-level functions/components appear before or are clearly separated from lower-level implementation details.
+- Flag lines of JavaScript code exceeding the project's configured maximum line length (Prettier often handles this).
+- Detect brittle horizontal alignment of code (Prettier usually discourages this).
+- Check for consistent use of blank lines to separate logical code blocks (often managed by Prettier).
+- Verify consistent indentation style and depth (usually managed by Prettier/ESLint).
+- Flag classes without proper encapsulation (e.g., directly mutable public fields where methods or getters/setters with `#privateField` would be better).
+- Differentiate: Plain Old JavaScript Objects (POJOs) for data structures should lack complex methods; classes should encapsulate behavior and state.
+- Identify classes or objects that inappropriately mix extensive data exposure with complex, unrelated behavior.
+- Flag JS classes or modules exceeding configured thresholds for methods, properties, or lines of code.
+- Identify classes or modules with low cohesion, suggesting multiple responsibilities (e.g., a class handling both UI logic and data fetching).
+- Flag classes with an excessive number of instance properties (class fields).
+- Detect `instanceof` checks suggesting a need for polymorphism or a flaw in class hierarchy design; favor composition.
+- Strongly recommend splitting functions/methods driven by type/flag parameters into specific ones or using polymorphic dispatch (objects with common interface).
+- Flag excessive use of static methods if they manage state or represent logic that could belong to an instance; use for true utilities.
+- Flag test (`it` or `test`) blocks with multiple `expect` calls verifying unrelated aspects; aim for one logical assertion or state verification per test.
+- Apply naming/clarity rules to `describe` and `it` blocks; names should describe scenario & outcome. Avoid magic values in assertions.
+- Flag unit tests with `setTimeout` (unless using fake timers), or direct slow operations (real I/O, network) unless clearly marked as integration/e2e tests.
+- Identify potential test dependencies (e.g., shared mutable state across tests, reliance on execution order). Use `beforeEach`/`afterEach` for cleanup.
+- Flag non-deterministic factors in tests (e.g., unmocked `Date()`, `Math.random()`). Mock dependencies and side effects consistently.
+- Identify highly coupled JS modules (check import/export dependencies) that are resistant to change or reuse.
+- Highlight complex JavaScript logic (e.g., deeply nested `async/await` chains, complex array manipulations) with low test coverage.
+- Identify components/modules with many hard-coded dependencies on concrete implementations in other modules, hindering reuse or testing.
+- Flag overly elaborate designs or algorithms (e.g., premature optimizations, complex manual Promise management) where simpler JS features or library functions exist.
+- Detect duplicated or near-duplicated JavaScript code blocks; suggest utility functions, custom hooks (React), or shared services.
+- Aggregate violations of JS naming, commenting, length, and structure rules as an indicator of poor understandability (opacity).
+- Identify 'callback hell' (deeply nested callbacks) or unhandled Promise rejections; promote `async/await` and robust error handling in Promises.
+- For frontend JS, flag frequent direct DOM manipulations in loops or updates that could be batched or optimized (consider virtual DOM benefits).
+- In component-based frameworks (React, Vue, Angular), flag direct mutation of input props; props should be immutable.
+- Flag UI components that are too large (lines of code, state variables, template size) or handle too many responsibilities; suggest decomposition.
+"""
