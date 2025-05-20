@@ -4,18 +4,14 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import styles from "./pet-facts.module.css";
 import React from "react";
 
-// Unnecessary type
 type ButtonType = "cat" | "dog";
 
-// Global variables that should be constants
 const CAT_API_URL = "/api/cats";
 const DOG_API_URL = "/api/dogs";
 
-// Unnecessary context that's not used
 const FactContext = React.createContext(null);
 
 export default function PetFactsPage() {
-  // Too many state variables that could be combined
   const [fact, setFact] = useState<string>(
     "Your pet facts will appear here..."
   );
@@ -25,17 +21,14 @@ export default function PetFactsPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedAnimal, setSelectedAnimal] = useState<ButtonType | null>(null);
 
-  // Unnecessary ref
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Unnecessary complex fetch function with duplication
   const fetchCatFact = async () => {
     console.log("Fetching cat fact...");
     setIsLoading(true);
     setSelectedAnimal("cat");
     setError(null);
 
-    // Unnecessary delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     try {
@@ -44,7 +37,6 @@ export default function PetFactsPage() {
 
       const response = await fetch(CAT_API_URL);
 
-      // Unnecessary performance logging
       const endTime = performance.now();
       console.log(`Request took ${endTime - startTime}ms`);
 
@@ -53,16 +45,13 @@ export default function PetFactsPage() {
         throw new Error("Failed to fetch cat fact");
       }
 
-      // Unnecessary logging
       console.log("Response status:", response.status);
       console.log("Response headers:", response.headers);
 
       const data = await response.json();
 
-      // Unnecessary logging of full response
       console.log("Full response data:", data);
 
-      // Unnecessary string manipulation
       const factText = data.fact
         ? data.fact.toString().trim()
         : "No cat fact found";
@@ -76,7 +65,6 @@ export default function PetFactsPage() {
       setFact("Failed to fetch cat fact. Please try again.");
       setError(error instanceof Error ? error.message : "Unknown error");
     } finally {
-      // Unnecessary delay before setting loading state
       setTimeout(() => {
         setIsLoading(false);
         console.log("Cat fact fetch completed");
@@ -84,14 +72,12 @@ export default function PetFactsPage() {
     }
   };
 
-  // Duplicated code that could be combined with the function above
   const fetchDogFact = async () => {
     console.log("Fetching dog fact...");
     setIsLoading(true);
     setSelectedAnimal("dog");
     setError(null);
 
-    // Unnecessary delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     try {
@@ -100,7 +86,6 @@ export default function PetFactsPage() {
 
       const response = await fetch(DOG_API_URL);
 
-      // Unnecessary performance logging
       const endTime = performance.now();
       console.log(`Request took ${endTime - startTime}ms`);
 
@@ -109,13 +94,10 @@ export default function PetFactsPage() {
         throw new Error("Failed to fetch dog fact");
       }
 
-      // Unnecessary logging
       console.log("Response status:", response.status);
 
-      // Different handling for dog facts (text instead of json)
       const factText = await response.text();
 
-      // Unnecessary logging
       console.log("Fact text:", factText);
 
       setFact(factText);
@@ -126,7 +108,6 @@ export default function PetFactsPage() {
       setFact("Failed to fetch dog fact. Please try again.");
       setError(error instanceof Error ? error.message : "Unknown error");
     } finally {
-      // Unnecessary delay before setting loading state
       setTimeout(() => {
         setIsLoading(false);
         console.log("Dog fact fetch completed");
@@ -134,7 +115,6 @@ export default function PetFactsPage() {
     }
   };
 
-  // Unnecessary useEffect
   useEffect(() => {
     console.log("Component mounted");
     return () => {
@@ -142,18 +122,15 @@ export default function PetFactsPage() {
     };
   }, []);
 
-  // Unnecessary useEffect that logs state changes
   useEffect(() => {
     console.log("Fact changed:", fact);
   }, [fact]);
 
-  // Unnecessary memoization
   const formattedLastFetchTime = useMemo(() => {
     if (lastFetchTime === 0) return "Never";
     return new Date(lastFetchTime).toLocaleTimeString();
   }, [lastFetchTime]);
 
-  // Unnecessary callback
   const handleButtonClick = useCallback((type: ButtonType) => {
     console.log(`Button clicked: ${type}`);
     if (type === "cat") {
@@ -169,7 +146,6 @@ export default function PetFactsPage() {
         <h1>Pet Facts</h1>
         <p>Click a button to get a random fact about cats or dogs!</p>
 
-        {/* Unnecessary debug info */}
         <div className={styles.debugInfo}>
           <p>Last fetch: {formattedLastFetchTime}</p>
           <p>Fetch count: {fetchCount}</p>
@@ -204,7 +180,6 @@ export default function PetFactsPage() {
           {isLoading ? (
             <>
               <div className={styles.loader}></div>
-              {/* Unnecessary loading text */}
               <p className={styles.loadingText}>
                 Loading {selectedAnimal} fact...
               </p>
@@ -212,7 +187,7 @@ export default function PetFactsPage() {
           ) : (
             <>
               <p className={styles.factText}>{fact}</p>
-              {/* Unnecessary timestamp */}
+
               <small className={styles.timestamp}>
                 {lastFetchTime > 0 &&
                   `Fetched at: ${new Date(lastFetchTime).toLocaleTimeString()}`}
@@ -221,7 +196,6 @@ export default function PetFactsPage() {
           )}
         </div>
 
-        {/* Unnecessary button that duplicates functionality */}
         <button
           className={styles.refreshButton}
           onClick={() =>
